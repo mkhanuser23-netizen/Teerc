@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Family AI Game Day — Abu Dhabi University. Choose fun family games powered by AI-created challenges, heritage clues and stories." />
+  <title>Family AI Game Day | Abu Dhabi University</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #C5A572;
+      --gold-dark: #A88B4A;
+      --gold-light: #E8D9B5;
+      --green: #0A5C36;
+      --green-dark: #064028;
+      --green-mid: #0D6B3F;
+      --cream: #FBF7F0;
+      --sand: #F0E6D3;
+      --text: #1A1A1A;
+      --white: #FFFFFF;
+      --danger: #C0392B;
+      --success: #27AE60;
+      --shadow: 0 8px 30px rgba(10, 92, 54, 0.12);
+      --shadow-lg: 0 16px 48px rgba(10, 92, 54, 0.18);
+      --radius: 16px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(160deg, var(--cream) 0%, var(--sand) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* ========== SPLASH SCREEN ========== */
+    .splash {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(165deg, var(--green-dark) 0%, var(--green) 45%, #0A6B3A 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 24px;
+      transition: opacity 0.7s ease, visibility 0.7s ease, transform 0.7s ease;
+    }
+
+    .splash.hide {
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .splash-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.07;
+      background-image:
+        radial-gradient(circle at 20% 30%, var(--gold) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, var(--gold-light) 0%, transparent 35%),
+        radial-gradient(circle at 50% 50%, transparent 60%, rgba(0,0,0,0.15) 100%);
+      pointer-events: none;
+    }
+
+    .splash-ornament {
+      width: 72px;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 0 auto 28px;
+      border-radius: 2px;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .splash-logo {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 18px;
+      animation: fadeUp 0.8s ease 0.3s both;
+    }
+
+    .splash h1 {
+      font-size: clamp(2.2rem, 7vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      color: var(--white);
+      animation: fadeUp 0.8s ease 0.4s both;
+    }
+
+    .splash h1 span {
+      color: var(--gold);
+    }
+
+    .splash-tagline {
+      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 380px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+      animation: fadeUp 0.8s ease 0.5s both;
+    }
+
+    .splash-icons {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      margin-bottom: 40px;
+      animation: fadeUp 0.8s ease 0.6s both;
+    }
+
+    .splash-icons span {
+      font-size: 1.8rem;
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      border: 1px solid rgba(197, 165, 114, 0.35);
+      transition: transform 0.25s ease, background 0.25s;
+    }
+
+    .splash-icons span:hover {
+      transform: translateY(-4px) scale(1.08);
+      background: rgba(197, 165, 114, 0.2);
+    }
+
+    .splash-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: var(--gold);
+      color: var(--green-dark);
+      border: none;
+      border-radius: 50px;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+      transition: all 0.25s ease;
+      animation: fadeUp 0.8s ease 0.7s both;
+    }
+
+    .splash-btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .splash-btn:active {
+      transform: translateY(0);
+    }
+
+    .splash-footer {
+      position: absolute;
+      bottom: 28px;
+      left: 0;
+      right: 0;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: 0.5px;
+      animation: fadeUp 0.8s ease 0.9s both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ========== APP ========== */
+    .app {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
+    }
+
+    .app.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 28px 20px 22px;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      border-top: 5px solid var(--gold);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(197, 165, 114, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .header-logo {
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .header h1 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      color: var(--green-dark);
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    /* Progress steps */
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .step {
+      flex: 1;
+      min-width: 70px;
+      text-align: center;
+      padding: 10px 4px;
+      background: var(--white);
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #888;
+      border: 2px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .step.active {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+      box-shadow: 0 4px 14px rgba(10, 92, 54, 0.25);
+    }
+
+    .step.done {
+      background: var(--sand);
+      color: var(--green);
+      border-color: var(--gold);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      animation: cardIn 0.4s ease both;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card h2 {
+      font-size: 1.45rem;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .card .subtitle {
+      color: #666;
+      margin-bottom: 22px;
+      font-size: 0.95rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 26px;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--green-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(10, 92, 54, 0.3);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--text);
+    }
+
+    .btn-gold:hover:not(:disabled) {
+      background: var(--gold-dark);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--green);
+      color: var(--green);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-success:hover:not(:disabled) {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    /* Game selection */
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+    }
+
+    .game-card {
+      background: var(--cream);
+      border: 2px solid transparent;
+      border-radius: 14px;
+      padding: 20px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      outline: none;
+    }
+
+    .game-card:hover,
+    .game-card:focus-visible {
+      border-color: var(--gold);
+      background: #FFF9F0;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(197, 165, 114, 0.25);
+    }
+
+    .game-card.selected {
+      border-color: var(--gold);
+      background: #FFF9F0;
+      box-shadow: 0 6px 20px rgba(197, 165, 114, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .game-card .icon {
+      font-size: 2.4rem;
+      margin-bottom: 10px;
+      display: block;
+      transition: transform 0.25s;
+    }
+
+    .game-card:hover .icon,
+    .game-card.selected .icon {
+      transform: scale(1.12);
+    }
+
+    .game-card h3 {
+      font-size: 1.05rem;
+      color: var(--green-dark);
+      margin-bottom: 4px;
+    }
+
+    .game-card p {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--text);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      margin-top: 8px;
+    }
+
+    /* Players */
+    .player-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .player-chip {
+      background: var(--sand);
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .player-chip:hover {
+      background: var(--gold-light);
+    }
+
+    .player-chip button {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 1.1rem;
+      line-height: 1;
+      padding: 0 2px;
+      border-radius: 4px;
+    }
+
+    .player-chip button:hover {
+      background: rgba(192, 57, 43, 0.1);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .input-row input {
+      flex: 1;
+      padding: 13px 16px;
+      border: 2px solid #E0D5C0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-row input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(197, 165, 114, 0.2);
+    }
+
+    .teams-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .team {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 16px;
+      border: 2px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .team.team-a { border-color: #3498DB; }
+    .team.team-b { border-color: #E74C3C; }
+
+    .team h4 {
+      margin-bottom: 10px;
+      font-size: 1rem;
+    }
+
+    .team-a h4 { color: #2980B9; }
+    .team-b h4 { color: #C0392B; }
+
+    .team-player {
+      background: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.15s;
+    }
+
+    .team-player:hover {
+      background: var(--sand);
+      transform: translateX(3px);
+    }
+
+    /* Rules */
+    .rules-list {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+
+    .rules-list li {
+      margin-bottom: 10px;
+      padding-left: 6px;
+    }
+
+    .rules-list strong {
+      color: var(--green);
+    }
+
+    /* Bonus MCQ */
+    .bonus-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .bonus-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(197, 165, 114, 0.35);
+    }
+
+    .mcq-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .mcq-option {
+      background: var(--cream);
+      border: 2px solid #E0D5C0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      font-family: inherit;
+      color: var(--text);
+    }
+
+    .mcq-option:hover {
+      border-color: var(--gold);
+      background: #FFF9F0;
+      transform: translateX(4px);
+    }
+
+    .mcq-option.selected {
+      border-color: var(--gold);
+      background: #FFF9F0;
+      box-shadow: 0 4px 14px rgba(197, 165, 114, 0.25);
+    }
+
+    .mcq-option.correct {
+      border-color: var(--success);
+      background: #E8F8F0;
+    }
+
+    .mcq-option.wrong {
+      border-color: var(--danger);
+      background: #FDEDEC;
+      opacity: 0.85;
+    }
+
+    .bonus-result {
+      text-align: center;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 16px 0;
+      font-weight: 600;
+    }
+
+    .bonus-result.success {
+      background: #E8F8F0;
+      color: var(--success);
+      border: 2px solid var(--success);
+    }
+
+    .bonus-result.fail {
+      background: #FDEDEC;
+      color: var(--danger);
+      border: 2px solid var(--danger);
+    }
+
+    /* Loading screen */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(165deg, var(--green-dark) 0%, var(--green) 50%, #0A6B3A 100%);
+      color: white;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.55s ease, visibility 0.55s ease;
+    }
+
+    .loading-screen.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loading-screen.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .loading-logo {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 3px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      margin-bottom: 24px;
+      box-shadow: 0 0 0 8px rgba(197, 165, 114, 0.15), 0 12px 40px rgba(0,0,0,0.25);
+      animation: logoPulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 8px rgba(197, 165, 114, 0.15), 0 12px 40px rgba(0,0,0,0.25); }
+      50% { transform: scale(1.06); box-shadow: 0 0 0 14px rgba(197, 165, 114, 0.22), 0 16px 48px rgba(0,0,0,0.3); }
+    }
+
+    .loading-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .loading-title span {
+      color: var(--gold);
+    }
+
+    .loading-sub {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 28px;
+    }
+
+    .loading-spinner {
+      width: 42px;
+      height: 42px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      margin-top: 18px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 1px;
+    }
+
+    /* Game play */
+    .timer-display {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .timer {
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--green-dark);
+      font-variant-numeric: tabular-nums;
+      transition: color 0.3s;
+    }
+
+    .timer.warning {
+      color: var(--danger);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .turn-info {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .ai-content {
+      background: linear-gradient(135deg, #FFF9F0, #F5EDE0);
+      border: 2px solid var(--gold);
+      border-radius: 14px;
+      padding: 24px;
+      margin: 18px 0;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(197, 165, 114, 0.15);
+    }
+
+    .ai-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--text);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(197, 165, 114, 0.35);
+    }
+
+    .ai-content .clue-text {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.6;
+      margin-top: 8px;
+    }
+
+    .ai-content .clue-type {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .score-board {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 20px 0;
+    }
+
+    .score-box {
+      text-align: center;
+      min-width: 100px;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: var(--cream);
+    }
+
+    .score-box .label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .score-box .value {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--green-dark);
+    }
+
+    .score-box.team-a .value { color: #2980B9; }
+    .score-box.team-b .value { color: #C0392B; }
+
+    /* Results */
+    .winner-banner {
+      text-align: center;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: white;
+      border-radius: 14px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .winner-banner h2 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .round-scores {
+      background: var(--cream);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .round-scores h4 {
+      margin-bottom: 10px;
+      color: var(--green);
+    }
+
+    .round-scores p {
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .teams-box {
+        grid-template-columns: 1fr;
+      }
+      .timer {
+        font-size: 2.6rem;
+      }
+      .btn-group {
+        flex-direction: column;
+      }
+      .btn {
+        width: 100%;
+      }
+      .splash-icons {
+        gap: 12px;
+      }
+      .splash-icons span {
+        width: 46px;
+        height: 46px;
+        font-size: 1.5rem;
+      }
+      .step {
+        font-size: 10px;
+        padding: 8px 2px;
+        min-width: 56px;
+      }
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 0.8rem;
+      color: #999;
+    }
+
+    /* Focus visible for accessibility */
+    .btn:focus-visible,
+    .game-card:focus-visible,
+    .splash-btn:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <!-- ========== SPLASH SCREEN ========== -->
+  <div class="splash" id="splash" role="dialog" aria-label="Welcome to Family AI Game Day">
+    <div class="splash-pattern" aria-hidden="true"></div>
+    <div class="splash-ornament"></div>
+    <div class="splash-logo">Abu Dhabi University · Cycle 2</div>
+    <h1>Family <span>AI</span> Game Day</h1>
+    <p class="splash-tagline">Choose the fun. Your app hosts it. AI creates the challenges.</p>
+    <div class="splash-icons" aria-hidden="true">
+      <span title="Football">⚽</span>
+      <span title="Falcon">🦅</span>
+      <span title="Desert">🐪</span>
+      <span title="Riddles">📜</span>
+      <span title="Stories">📖</span>
+    </div>
+    <button class="splash-btn" id="btnEnter" type="button">
+      Enter Game Day
+      <span aria-hidden="true">→</span>
+    </button>
+    <p class="splash-footer">Inspired by culture, heritage &amp; sports</p>
+  </div>
+
+  <!-- ========== LOADING SCREEN (shows first) ========== -->
+  <div class="loading-screen" id="loadingScreen" role="status" aria-live="polite" aria-label="Loading Family AI Game Day">
+    <div class="loading-logo" aria-hidden="true">🏛️</div>
+    <div class="loading-title">Family <span>AI</span> Game Day</div>
+    <div class="loading-sub">Abu Dhabi University · Cycle 2</div>
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <div class="loading-text" id="loadingText">Loading…</div>
+  </div>
+
+  <div class="app" id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">Abu Dhabi University · Cycle 2</div>
+      <h1>Family AI Game Day</h1>
+      <p>A family chooses the fun. Your app hosts it. AI helps create the games.</p>
+    </header>
+
+    <!-- Progress -->
+    <div class="steps" id="progressSteps" role="navigation" aria-label="Game progress">
+      <div class="step active" data-step="1">1. Choose</div>
+      <div class="step" data-step="2">2. Players</div>
+      <div class="step" data-step="3">3. Rules</div>
+      <div class="step" data-step="4">4. Bonus</div>
+      <div class="step" data-step="5">5. Play</div>
+      <div class="step" data-step="6">6. Final</div>
+    </div>
+
+    <!-- SCREEN 1: Choose Game -->
+    <section id="screen1" class="card" aria-labelledby="choose-title">
+      <h2 id="choose-title">Choose a Game</h2>
+      <p class="subtitle">Select one of the five family games. Each uses AI-created content during play.</p>
+      <div class="game-grid" id="gameGrid" role="listbox" aria-label="Available games">
+        <!-- filled by JS -->
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btnChooseGame" disabled>Continue →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: Players & Teams -->
+    <section id="screen2" class="card hidden" aria-labelledby="players-title">
+      <h2 id="players-title">Players &amp; Teams</h2>
+      <p class="subtitle">Add family members. For team games, assign them to Team A or Team B.</p>
+
+      <div class="input-row">
+        <input type="text" id="playerInput" placeholder="Enter player name..." maxlength="20" aria-label="Player name" />
+        <button class="btn btn-gold" id="btnAddPlayer" type="button">Add</button>
+      </div>
+
+      <div class="player-list" id="playerList"></div>
+
+      <div id="teamSetup" class="hidden">
+        <h3 style="margin: 16px 0 10px; font-size: 1.1rem;">Assign Teams</h3>
+        <div class="teams-box">
+          <div class="team team-a">
+            <h4>Team A</h4>
+            <div id="teamAList"></div>
+          </div>
+          <div class="team team-b">
+            <h4>Team B</h4>
+            <div id="teamBList"></div>
+          </div>
+        </div>
+        <p style="font-size: 0.85rem; color: #666; margin-top: 10px;">Tap a player name to move them between teams.</p>
+        <div class="player-list" id="unassignedList" style="margin-top: 12px;"></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-outline" id="btnBack1" type="button">← Back</button>
+        <button class="btn btn-primary" id="btnSaveTeams" disabled type="button">Save &amp; Continue →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: Rules & Ready -->
+    <section id="screen3" class="card hidden" aria-labelledby="rules-title">
+      <h2 id="rules-title">Rules &amp; Ready</h2>
+      <p class="subtitle" id="rulesSubtitle">Review the rules, then continue to the Bonus Point challenge.</p>
+
+      <div class="rules-list" id="rulesContent"></div>
+
+      <div class="btn-group">
+        <button class="btn btn-outline" id="btnBack2" type="button">← Back</button>
+        <button class="btn btn-primary" id="btnToBonus" type="button">Continue to Bonus Point →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN BONUS: History MCQ -->
+    <section id="screenBonus" class="card hidden" aria-labelledby="bonus-title">
+      <div class="bonus-header">
+        <div class="bonus-badge">⭐ BONUS POINT</div>
+        <h2 id="bonus-title">History Challenge</h2>
+        <p class="subtitle" id="bonusSubtitle">Answer correctly to earn a bonus point for your team!</p>
+      </div>
+
+      <div class="ai-content" style="margin-top: 8px;">
+        <div class="ai-badge">✨ HISTORY QUIZ</div>
+        <div class="clue-type" id="bonusGameName">Game History</div>
+        <div class="clue-text" id="bonusQuestion">Loading question…</div>
+      </div>
+
+      <div class="mcq-options" id="bonusOptions" role="listbox" aria-label="Answer choices">
+        <!-- filled by JS -->
+      </div>
+
+      <div id="bonusFeedback" class="hidden"></div>
+
+      <div class="btn-group" id="bonusActions">
+        <button class="btn btn-outline" id="btnBackBonus" type="button">← Back to Rules</button>
+        <button class="btn btn-primary" id="btnSubmitBonus" type="button" disabled>Submit Answer</button>
+      </div>
+
+      <div class="btn-group hidden" id="bonusAfter">
+        <button class="btn btn-success" id="btnAwardBonusA" type="button">+1 Bonus to Team A</button>
+        <button class="btn btn-danger" id="btnAwardBonusB" type="button">+1 Bonus to Team B</button>
+        <button class="btn btn-outline" id="btnSkipBonusPoint" type="button">No Bonus / Continue</button>
+        <button class="btn btn-gold" id="btnStartAfterBonus" type="button">Start Game →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: Game Content / Play -->
+    <section id="screen4" class="card hidden" aria-labelledby="playTitle">
+      <h2 id="playTitle">Game Time</h2>
+      <div class="turn-info" id="turnInfo">Round 1 · Player's turn</div>
+
+      <div class="score-board" id="scoreBoard">
+        <div class="score-box team-a">
+          <div class="label">Team A</div>
+          <div class="value" id="scoreA">0</div>
+        </div>
+        <div class="score-box team-b">
+          <div class="label">Team B</div>
+          <div class="value" id="scoreB">0</div>
+        </div>
+      </div>
+
+      <div class="timer-display">
+        <div class="timer" id="timerDisplay" aria-live="polite">00:45</div>
+      </div>
+
+      <div class="ai-content" id="aiContent">
+        <div class="ai-badge">✨ AI CREATED</div>
+        <div class="clue-type" id="clueType">Challenge</div>
+        <div class="clue-text" id="clueText">Loading challenge...</div>
+      </div>
+
+      <div class="btn-group" id="playActions">
+        <button class="btn btn-outline" id="btnSkip" type="button">Skip / Next Clue</button>
+        <button class="btn btn-success" id="btnCorrect" type="button">Correct ✓</button>
+      </div>
+
+      <div class="btn-group" style="margin-top: 12px;">
+        <button class="btn btn-gold" id="btnEndRound" type="button">End Round / Record Score</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 5: Record Result -->
+    <section id="screen5" class="card hidden" aria-labelledby="result-title">
+      <h2 id="result-title">Record the Result</h2>
+      <p class="subtitle">Host confirms the outcome of this turn or round.</p>
+
+      <div class="ai-content" style="border-color: var(--green);">
+        <div class="clue-text" id="confirmText">Did the player / team succeed?</div>
+      </div>
+
+      <div class="score-board">
+        <div class="score-box team-a">
+          <div class="label">Team A</div>
+          <div class="value" id="confirmScoreA">0</div>
+        </div>
+        <div class="score-box team-b">
+          <div class="label">Team B</div>
+          <div class="value" id="confirmScoreB">0</div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-success" id="btnAddPointA" type="button">+1 Team A</button>
+        <button class="btn btn-danger" id="btnAddPointB" type="button">+1 Team B</button>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-outline" id="btnNoPoint" type="button">No Point</button>
+        <button class="btn btn-primary" id="btnNextTurn" type="button">Next Turn →</button>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-gold" id="btnFinishGame" type="button">Finish Game &amp; See Results</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 6: Final Results -->
+    <section id="screen6" class="card hidden" aria-labelledby="winnerText">
+      <div class="winner-banner" id="winnerBanner">
+        <h2 id="winnerText">Team A Wins!</h2>
+        <p id="finalScoreText">Final score 3 – 2</p>
+      </div>
+
+      <div class="round-scores">
+        <h4>Game Summary</h4>
+        <div id="summaryList"></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="btnPlayAgain" type="button">Play Again</button>
+        <button class="btn btn-outline" id="btnChooseAnother" type="button">Choose Another Game</button>
+      </div>
+    </section>
+
+    <p class="footer-note">Family AI Game Day · Inspired by culture, heritage &amp; sports · AI helps create the fun</p>
+  </div>
+
+  <script>
+    // ========== GAME DATA ==========
+    const GAMES = [
+      {
+        id: 'football',
+        name: 'Football Match',
+        icon: '⚽',
+        type: 'team',
+        short: 'Team game · Record goals',
+        description: 'Classic family football. Host sets teams, runs the timer and records goals. AI creates fun challenge cards used during play.',
+        rules: [
+          { title: 'Teams', text: 'Two teams of equal (or nearly equal) players.' },
+          { title: 'Match length', text: 'Short timed rounds (demo timing of 45 seconds). Host can restart the timer anytime.' },
+          { title: 'Scoring', text: 'Host records every goal. Highest score at the end of the rounds wins.' },
+          { title: 'AI Challenges', text: 'During play the app shows AI-created challenge cards (e.g. “Score with your weaker foot only”). Host decides if the challenge was met and can award bonus points.' },
+          { title: 'Tie-break', text: 'If scores are level, play one extra sudden-death challenge card. First team to succeed wins.' }
+        ],
+        roundTime: 45,
+        maxRounds: 4,
+        content: [
+          { type: 'Challenge Card', text: 'Score the next goal using only your weaker foot. Bonus point if successful!' },
+          { type: 'Challenge Card', text: 'Celebrate the next goal with a team chant or coordinated dance for 5 seconds. Team spirit points!' },
+          { type: 'Mission', text: 'The next goal must be scored after a clear pass from a teammate. Teamwork counts.' },
+          { type: 'Challenge Card', text: 'Defend like a desert fortress for 15 seconds – no goals conceded!' },
+          { type: 'Mission', text: 'Name a famous Emirati or Gulf football club or player before taking the free kick.' },
+          { type: 'Challenge Card', text: 'All players on the attacking team must shout “Yalla!” together before the next attack starts.' }
+        ],
+        bonusQuestion: {
+          question: 'In which year was the UAE Football Association founded — the same year the United Arab Emirates itself was formed?',
+          options: ['1968', '1971', '1975', '1980'],
+          correct: 1
+        }
+      },
+      {
+        id: 'falcon',
+        name: "Falcon's Eye",
+        icon: '🦅',
+        type: 'team',
+        short: 'Picture & text clues',
+        description: 'Guess cultural treasures, animals and landmarks of the UAE from AI-created clues. Fast thinking wins.',
+        rules: [
+          { title: 'How to play', text: 'Teams take turns. An AI-created clue appears. The team has the time limit to guess correctly.' },
+          { title: 'Points', text: 'Correct guess = 1 point. Host confirms the answer (answers are not shown on screen).' },
+          { title: 'Rounds', text: 'Play up to 6 clues. Highest score wins.' },
+          { title: 'Tie-break', text: 'One extra sudden-death clue. First correct answer wins.' }
+        ],
+        roundTime: 35,
+        maxRounds: 6,
+        content: [
+          { type: 'Picture Clue', text: 'I soar over the dunes with keen eyes. Emirati hunters have partnered with me for centuries. What am I?' },
+          { type: 'Heritage Clue', text: 'I am a tall tower that cools the old houses of Al Ain and Liwa without electricity. What traditional feature am I?' },
+          { type: 'Nature Clue', text: 'I carry families across the golden desert and am called the “ship of the desert”. What am I?' },
+          { type: 'Landmark Clue', text: 'I stand proudly in Abu Dhabi with a unique leaning design. Many visitors take photos here. What landmark am I?' },
+          { type: 'Culture Clue', text: 'I am the traditional white head covering worn by Emirati men, held in place by a black cord. What is my name?' },
+          { type: 'Food Clue', text: 'I am a sweet made with dates, nuts and spices, often shared during celebrations and Ramadan. What traditional treat am I?' },
+          { type: 'Animal Clue', text: 'I am the national animal of the UAE, strong, graceful and perfectly adapted to desert life. What am I?' },
+          { type: 'Heritage Clue', text: 'I am a large open gathering space where families sit, drink Arabic coffee and share stories. What traditional place am I?' }
+        ],
+        bonusQuestion: {
+          question: 'Falconry is recognised by which international organisation as Intangible Cultural Heritage of Humanity?',
+          options: ['FIFA', 'UNESCO', 'WHO', 'OPEC'],
+          correct: 1
+        }
+      },
+      {
+        id: 'desert',
+        name: 'Desert Race',
+        icon: '🐪',
+        type: 'team',
+        short: 'Movement challenges',
+        description: 'AI creates movement challenge cards inspired by traditional desert races, camel walks and falcon training. Complete the action to score!',
+        rules: [
+          { title: 'How to play', text: 'A challenge card appears. The active player or whole team must perform the movement within the time limit.' },
+          { title: 'Scoring', text: 'Host decides if the challenge was completed well. Success = 1 point.' },
+          { title: 'Safety', text: 'All movements are gentle and family-friendly. Skip any card that feels unsafe for anyone present.' },
+          { title: 'Rounds', text: 'Play up to 6 cards. Highest score wins.' }
+        ],
+        roundTime: 30,
+        maxRounds: 6,
+        content: [
+          { type: 'Movement Card', text: 'Walk like a proud camel across the room – slow, steady steps with head held high – for 15 seconds.' },
+          { type: 'Movement Card', text: 'Flap your arms like a falcon taking flight, then land softly on one knee. Repeat 3 times.' },
+          { type: 'Movement Card', text: 'Do the “desert dune” stretch: reach both arms up high, then slowly bend to touch your toes twice.' },
+          { type: 'Movement Card', text: 'Race in place like a purebred Arabian horse for 12 seconds – high knees and strong posture!' },
+          { type: 'Movement Card', text: 'Balance on one foot like a falconer watching the sky. Hold for 8 seconds, then switch feet.' },
+          { type: 'Movement Card', text: 'Make a big circle with your arms as if drawing the shape of a traditional majlis tent.' },
+          { type: 'Movement Card', text: 'Hop forward three times like a desert hare, then freeze in a strong, proud pose.' }
+        ],
+        bonusQuestion: {
+          question: 'What modern innovation is now commonly used in UAE camel racing instead of traditional child jockeys?',
+          options: ['Electric cars', 'Robot jockeys', 'Drones', 'Hoverboards'],
+          correct: 1
+        }
+      },
+      {
+        id: 'riddles',
+        name: 'Heritage Riddles',
+        icon: '📜',
+        type: 'team',
+        short: 'UAE culture riddles',
+        description: 'Solve AI-crafted riddles about Emirati heritage, history, sports and daily life. Knowledge and speed matter.',
+        rules: [
+          { title: 'How to play', text: 'Teams alternate. Read the riddle aloud. Guess within the time limit. Answers are not shown – host is the final judge.' },
+          { title: 'Points', text: 'Correct answer = 1 point.' },
+          { title: 'Help', text: 'Teams may discuss quietly among themselves before answering.' },
+          { title: 'Tie-break', text: 'One extra riddle. First correct team wins.' }
+        ],
+        roundTime: 40,
+        maxRounds: 6,
+        content: [
+          { type: 'Riddle', text: 'I am poured from a long-spouted pot into tiny cups. Guests receive me first as a sign of welcome. What am I?' },
+          { type: 'Riddle', text: 'My name means “the source” and I am a green oasis city famous for date palms and historic forts. Where am I?' },
+          { type: 'Riddle', text: 'I am the traditional group dance performed with sticks or rifles, full of pride, rhythm and poetry. What am I?' },
+          { type: 'Riddle', text: 'I am an old board game played with shells or stones in the sand, enjoyed for centuries across the Gulf. What am I?' },
+          { type: 'Riddle', text: 'I protect the wearer from the sun and wind and am held by a black cord. What traditional head covering am I?' },
+          { type: 'Riddle', text: 'I am the year the seven emirates united to form the United Arab Emirates. Which year am I?' },
+          { type: 'Riddle', text: 'I am the ancient practice of training birds of prey to hunt and return to the glove. What am I called?' },
+          { type: 'Riddle', text: 'I am a famous leaning skyscraper in Abu Dhabi whose design was inspired by a growing plant. What landmark am I?' }
+        ],
+        bonusQuestion: {
+          question: 'Where did families traditionally exchange riddles and stories as part of Arab oral culture?',
+          options: ['In the souk only', 'In the majlis', 'Only at school', 'On fishing boats'],
+          correct: 1
+        }
+      },
+      {
+        id: 'story',
+        name: 'Story of the Majlis',
+        icon: '📖',
+        type: 'team',
+        short: 'Story starter relay',
+        description: 'AI provides magical story starters about family, desert life and heritage. Each player adds one sentence. Host awards points for creativity and teamwork.',
+        rules: [
+          { title: 'How to play', text: 'An AI story starter appears. Players take turns adding one sentence to continue the story.' },
+          { title: 'Scoring', text: 'After the round, the host awards 1–2 points to the team for creativity, connection to heritage, or pure fun.' },
+          { title: 'Time', text: 'Each player has a short time to speak. Keep the story moving and inclusive!' },
+          { title: 'Goal', text: 'Create the most enjoyable and meaningful family story together.' }
+        ],
+        roundTime: 50,
+        maxRounds: 4,
+        content: [
+          { type: 'Story Starter', text: 'One cool evening in the Liwa desert, a young falconer discovered a glowing date palm that whispered secrets of the past…' },
+          { type: 'Story Starter', text: 'In a busy majlis in Abu Dhabi, the oldest uncle began a tale about the day the first oil was found, but he added a magical twist…' },
+          { type: 'Story Starter', text: 'A family was preparing for Eid when a friendly camel knocked on their door carrying a mysterious old map…' },
+          { type: 'Story Starter', text: 'During a traditional pearl-diving journey, the youngest diver found something unexpected inside a giant oyster…' },
+          { type: 'Story Starter', text: 'On the night before a big camel race, two rival families decided to share one tent and learned something surprising about each other…' },
+          { type: 'Story Starter', text: 'A grandmother in Al Ain opened her wooden chest and pulled out a letter written fifty years ago that changed everything…' }
+        ],
+        bonusQuestion: {
+          question: 'What is the traditional Emirati gathering place known as the heart of social life, hospitality and storytelling?',
+          options: ['The souk', 'The majlis', 'The fort', 'The dhow'],
+          correct: 1
+        }
+      }
+    ];
+
+    // ========== SOUND EFFECTS (Web Audio API — no external files needed) ==========
+    let audioCtx = null;
+
+    function getAudioCtx() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playTone(freq, duration, type, volume) {
+      try {
+        const ctx = getAudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.value = freq;
+        gain.gain.value = volume || 0.18;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+        gain.gain.setValueAtTime(volume || 0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        osc.start(now);
+        osc.stop(now + duration);
+      } catch (e) {
+        // Silently ignore if audio is blocked
+      }
+    }
+
+    function playCorrectSound() {
+      // Pleasant rising chime
+      playTone(523.25, 0.12, 'sine', 0.2);   // C5
+      setTimeout(() => playTone(659.25, 0.12, 'sine', 0.2), 100); // E5
+      setTimeout(() => playTone(783.99, 0.25, 'sine', 0.22), 200); // G5
+    }
+
+    function playWrongSound() {
+      // Soft descending buzz
+      playTone(220, 0.18, 'triangle', 0.15);
+      setTimeout(() => playTone(165, 0.28, 'triangle', 0.12), 120);
+    }
+
+    function playSkipSound() {
+      // Soft neutral click
+      playTone(400, 0.06, 'sine', 0.08);
+    }
+
+    // ========== STATE ==========
+    let state = {
+      currentScreen: 1,
+      selectedGame: null,
+      players: [],
+      teamA: [],
+      teamB: [],
+      scores: { A: 0, B: 0 },
+      currentRound: 1,
+      currentTurnIndex: 0,
+      currentContentIndex: 0,
+      timerInterval: null,
+      timeLeft: 0,
+      isTeamGame: true,
+      history: [],
+      bonusSelected: null,
+      bonusCorrect: false,
+      bonusAwarded: false
+    };
+
+    // ========== DOM REFS ==========
+    const screens = {
+      1: document.getElementById('screen1'),
+      2: document.getElementById('screen2'),
+      3: document.getElementById('screen3'),
+      bonus: document.getElementById('screenBonus'),
+      4: document.getElementById('screen4'),
+      5: document.getElementById('screen5'),
+      6: document.getElementById('screen6')
+    };
+
+    // ========== INIT ==========
+    function init() {
+      renderGameGrid();
+      bindEvents();
+      updateProgress();
+      setupInitialLoading();
+      setupSplash();
+    }
+
+    // Show loading screen first, then reveal splash
+    function setupInitialLoading() {
+      const loader = document.getElementById('loadingScreen');
+      const loadingText = document.getElementById('loadingText');
+      const messages = ['Loading…', 'Preparing Family Game Day…', 'Almost ready…'];
+      let msgIndex = 0;
+
+      const textInterval = setInterval(() => {
+        msgIndex = (msgIndex + 1) % messages.length;
+        if (loadingText) loadingText.textContent = messages[msgIndex];
+      }, 700);
+
+      // After ~2.2s hide loading and show splash underneath
+      setTimeout(() => {
+        clearInterval(textInterval);
+        if (loadingText) loadingText.textContent = 'Welcome!';
+        loader.classList.add('hide');
+        setTimeout(() => {
+          // Keep it in DOM but hidden; can be reused later for mid-game loading
+          loader.setAttribute('aria-hidden', 'true');
+        }, 600);
+      }, 2200);
+    }
+
+    function setupSplash() {
+      const splash = document.getElementById('splash');
+      const app = document.getElementById('app');
+      const btnEnter = document.getElementById('btnEnter');
+
+      btnEnter.addEventListener('click', () => {
+        splash.classList.add('hide');
+        app.classList.add('visible');
+        setTimeout(() => {
+          splash.style.display = 'none';
+        }, 750);
+      });
+
+      document.addEventListener('keydown', function onSplashKey(e) {
+        if (e.key === 'Enter' && !splash.classList.contains('hide') &&
+            document.getElementById('loadingScreen').classList.contains('hide')) {
+          btnEnter.click();
+          document.removeEventListener('keydown', onSplashKey);
+        }
+      });
+    }
+
+    function renderGameGrid() {
+      const grid = document.getElementById('gameGrid');
+      grid.innerHTML = GAMES.map(g => `
+        <div class="game-card" data-id="${g.id}" role="option" tabindex="0" aria-selected="false">
+          <div class="icon">${g.icon}</div>
+          <h3>${g.name}</h3>
+          <p>${g.short}</p>
+          <span class="badge">${g.type === 'team' ? 'Team' : 'Individual'}</span>
+        </div>
+      `).join('');
+
+      grid.querySelectorAll('.game-card').forEach(card => {
+        const select = () => {
+          grid.querySelectorAll('.game-card').forEach(c => {
+            c.classList.remove('selected');
+            c.setAttribute('aria-selected', 'false');
+          });
+          card.classList.add('selected');
+          card.setAttribute('aria-selected', 'true');
+          state.selectedGame = GAMES.find(g => g.id === card.dataset.id);
+          document.getElementById('btnChooseGame').disabled = false;
+        };
+        card.addEventListener('click', select);
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            select();
+          }
+        });
+      });
+    }
+
+    function bindEvents() {
+      document.getElementById('btnChooseGame').addEventListener('click', () => {
+        if (!state.selectedGame) return;
+        goToScreen(2);
+        setupTeamUI();
+      });
+
+      document.getElementById('btnAddPlayer').addEventListener('click', addPlayer);
+      document.getElementById('playerInput').addEventListener('keypress', e => {
+        if (e.key === 'Enter') addPlayer();
+      });
+      document.getElementById('btnBack1').addEventListener('click', () => goToScreen(1));
+      document.getElementById('btnSaveTeams').addEventListener('click', () => {
+        if (state.players.length < 2) {
+          alert('Please add at least 2 players.');
+          return;
+        }
+        if (state.selectedGame.type === 'team' && (state.teamA.length === 0 || state.teamB.length === 0)) {
+          autoBalanceTeams();
+        }
+        resetScores();
+        goToScreen(3);
+        renderRules();
+      });
+
+      document.getElementById('btnBack2').addEventListener('click', () => goToScreen(2));
+      document.getElementById('btnToBonus').addEventListener('click', showBonusScreen);
+
+      // Bonus MCQ events
+      document.getElementById('btnBackBonus').addEventListener('click', () => goToScreen(3));
+      document.getElementById('btnSubmitBonus').addEventListener('click', submitBonusAnswer);
+      document.getElementById('btnAwardBonusA').addEventListener('click', () => {
+        if (!state.bonusAwarded) {
+          state.scores.A += 1;
+          state.bonusAwarded = true;
+          updatePlayScores();
+          document.getElementById('btnAwardBonusA').disabled = true;
+          document.getElementById('btnAwardBonusB').disabled = true;
+        }
+      });
+      document.getElementById('btnAwardBonusB').addEventListener('click', () => {
+        if (!state.bonusAwarded) {
+          state.scores.B += 1;
+          state.bonusAwarded = true;
+          updatePlayScores();
+          document.getElementById('btnAwardBonusA').disabled = true;
+          document.getElementById('btnAwardBonusB').disabled = true;
+        }
+      });
+      document.getElementById('btnSkipBonusPoint').addEventListener('click', () => {});
+      document.getElementById('btnStartAfterBonus').addEventListener('click', showLoadingThenStart);
+
+      document.getElementById('btnCorrect').addEventListener('click', () => {
+        playCorrectSound();
+        stopTimer();
+        goToScreen(5);
+        document.getElementById('confirmText').textContent = 'Correct! Award the point?';
+        updateConfirmScores();
+      });
+      document.getElementById('btnSkip').addEventListener('click', () => {
+        playSkipSound();
+        nextContent();
+      });
+      document.getElementById('btnEndRound').addEventListener('click', () => {
+        stopTimer();
+        goToScreen(5);
+        document.getElementById('confirmText').textContent = 'Round ended. Award points or continue?';
+        updateConfirmScores();
+      });
+
+      document.getElementById('btnAddPointA').addEventListener('click', () => {
+        state.scores.A += 1;
+        updateConfirmScores();
+        updatePlayScores();
+      });
+      document.getElementById('btnAddPointB').addEventListener('click', () => {
+        state.scores.B += 1;
+        updateConfirmScores();
+        updatePlayScores();
+      });
+      document.getElementById('btnNoPoint').addEventListener('click', () => {});
+      document.getElementById('btnNextTurn').addEventListener('click', () => {
+        state.currentRound++;
+        if (state.currentRound > state.selectedGame.maxRounds) {
+          finishGame();
+        } else {
+          nextContent();
+          goToScreen(4);
+          startTimer();
+        }
+      });
+      document.getElementById('btnFinishGame').addEventListener('click', finishGame);
+
+      document.getElementById('btnPlayAgain').addEventListener('click', () => {
+        resetScores();
+        state.currentRound = 1;
+        state.currentContentIndex = 0;
+        state.bonusSelected = null;
+        state.bonusCorrect = false;
+        state.bonusAwarded = false;
+        goToScreen(3);
+        renderRules();
+      });
+      document.getElementById('btnChooseAnother').addEventListener('click', () => {
+        fullReset();
+        goToScreen(1);
+      });
+    }
+
+    function goToScreen(n) {
+      Object.values(screens).forEach(s => {
+        if (s) s.classList.add('hidden');
+      });
+      if (screens[n]) screens[n].classList.remove('hidden');
+      state.currentScreen = n;
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Map internal screen key → progress step number (1-6)
+    function getProgressStep(screen) {
+      if (screen === 'bonus') return 4;
+      if (screen === 4) return 5; // Play
+      if (screen === 5) return 5; // Result still under Play phase visually
+      if (screen === 6) return 6;
+      return screen; // 1, 2, 3
+    }
+
+    function updateProgress() {
+      const current = getProgressStep(state.currentScreen);
+      document.querySelectorAll('.step').forEach(step => {
+        const s = parseInt(step.dataset.step);
+        step.classList.remove('active', 'done');
+        if (s === current) step.classList.add('active');
+        else if (s < current) step.classList.add('done');
+      });
+    }
+
+    function addPlayer() {
+      const input = document.getElementById('playerInput');
+      const name = input.value.trim();
+      if (!name) return;
+      if (state.players.includes(name)) {
+        alert('Player already added.');
+        return;
+      }
+      state.players.push(name);
+      input.value = '';
+      if (state.selectedGame && state.selectedGame.type === 'team' && state.players.length >= 2) {
+        autoBalanceTeams();
+      }
+      renderPlayers();
+      document.getElementById('btnSaveTeams').disabled = state.players.length < 2;
+      input.focus();
+    }
+
+    function removePlayer(name) {
+      state.players = state.players.filter(p => p !== name);
+      state.teamA = state.teamA.filter(p => p !== name);
+      state.teamB = state.teamB.filter(p => p !== name);
+      renderPlayers();
+      document.getElementById('btnSaveTeams').disabled = state.players.length < 2;
+    }
+
+    function renderPlayers() {
+      const list = document.getElementById('playerList');
+      list.innerHTML = state.players.map(p => `
+        <div class="player-chip">
+          ${escapeHtml(p)}
+          <button onclick="removePlayer('${escapeAttr(p)}')" title="Remove" aria-label="Remove ${escapeAttr(p)}">×</button>
+        </div>
+      `).join('');
+
+      if (state.selectedGame && state.selectedGame.type === 'team') {
+        document.getElementById('teamSetup').classList.remove('hidden');
+        renderTeams();
+      } else {
+        document.getElementById('teamSetup').classList.add('hidden');
+      }
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function escapeAttr(str) {
+      return str.replace(/'/g, "\\\\'").replace(/"/g, '&quot;');
+    }
+
+    function setupTeamUI() {
+      if (state.selectedGame.type === 'team' && state.players.length >= 2 && state.teamA.length === 0) {
+        autoBalanceTeams();
+      }
+      renderPlayers();
+    }
+
+    function autoBalanceTeams() {
+      state.teamA = [];
+      state.teamB = [];
+      state.players.forEach((p, i) => {
+        if (i % 2 === 0) state.teamA.push(p);
+        else state.teamB.push(p);
+      });
+      renderTeams();
+    }
+
+    function renderTeams() {
+      const unassigned = state.players.filter(p => !state.teamA.includes(p) && !state.teamB.includes(p));
+      document.getElementById('teamAList').innerHTML = state.teamA.map(p =>
+        `<div class="team-player" onclick="movePlayer('${escapeAttr(p)}', 'B')" role="button" tabindex="0">${escapeHtml(p)} →</div>`
+      ).join('') || '<em style="color:#999">Empty</em>';
+      document.getElementById('teamBList').innerHTML = state.teamB.map(p =>
+        `<div class="team-player" onclick="movePlayer('${escapeAttr(p)}', 'A')" role="button" tabindex="0">${escapeHtml(p)} ←</div>`
+      ).join('') || '<em style="color:#999">Empty</em>';
+      document.getElementById('unassignedList').innerHTML = unassigned.map(p =>
+        `<div class="player-chip" style="cursor:pointer" onclick="assignPlayer('${escapeAttr(p)}')" role="button" tabindex="0">${escapeHtml(p)} (tap to assign)</div>`
+      ).join('');
+    }
+
+    function movePlayer(name, to) {
+      state.teamA = state.teamA.filter(p => p !== name);
+      state.teamB = state.teamB.filter(p => p !== name);
+      if (to === 'A') state.teamA.push(name);
+      else state.teamB.push(name);
+      renderTeams();
+    }
+
+    function assignPlayer(name) {
+      if (state.teamA.length <= state.teamB.length) state.teamA.push(name);
+      else state.teamB.push(name);
+      renderTeams();
+    }
+
+    window.removePlayer = removePlayer;
+    window.movePlayer = movePlayer;
+    window.assignPlayer = assignPlayer;
+
+    function renderRules() {
+      const g = state.selectedGame;
+      document.getElementById('rulesSubtitle').textContent = g.description;
+      const html = `
+        <ul style="list-style: none; padding: 0;">
+          ${g.rules.map(r => `<li><strong>${r.title}:</strong> ${r.text}</li>`).join('')}
+          <li style="margin-top:12px;"><strong>Players:</strong> ${state.players.map(escapeHtml).join(', ')}</li>
+          ${g.type === 'team' ? `<li><strong>Team A:</strong> ${state.teamA.map(escapeHtml).join(', ') || '—'} &nbsp;|&nbsp; <strong>Team B:</strong> ${state.teamB.map(escapeHtml).join(', ') || '—'}</li>` : ''}
+          <li><strong>Time per round:</strong> ${g.roundTime} seconds</li>
+          <li><strong>Max rounds:</strong> ${g.maxRounds}</li>
+        </ul>
+      `;
+      document.getElementById('rulesContent').innerHTML = html;
+    }
+
+    function startGame() {
+      // Called after Bonus (or loading). Scores may already include bonus point.
+      state.currentRound = 1;
+      state.currentContentIndex = 0;
+      state.currentTurnIndex = 0;
+      goToScreen(4);
+      document.getElementById('playTitle').textContent = state.selectedGame.name + ' ' + state.selectedGame.icon;
+      showContent();
+      startTimer();
+      updatePlayScores();
+      updateTurnInfo();
+    }
+
+    // ========== BONUS POINT MCQ ==========
+    function showBonusScreen() {
+      const g = state.selectedGame;
+      const bq = g.bonusQuestion;
+      state.bonusSelected = null;
+      state.bonusCorrect = false;
+      state.bonusAwarded = false;
+
+      document.getElementById('bonusGameName').textContent = g.name + ' ' + g.icon + ' · History';
+      document.getElementById('bonusQuestion').textContent = bq.question;
+      document.getElementById('bonusSubtitle').textContent = 'Answer correctly to earn a bonus point for your team!';
+
+      const optionsEl = document.getElementById('bonusOptions');
+      optionsEl.innerHTML = bq.options.map((opt, i) => `
+        <button type="button" class="mcq-option" data-index="${i}" role="option">${escapeHtml(opt)}</button>
+      `).join('');
+
+      optionsEl.querySelectorAll('.mcq-option').forEach(btn => {
+        btn.addEventListener('click', () => {
+          optionsEl.querySelectorAll('.mcq-option').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.bonusSelected = parseInt(btn.dataset.index);
+          document.getElementById('btnSubmitBonus').disabled = false;
+        });
+      });
+
+      document.getElementById('bonusFeedback').className = 'hidden';
+      document.getElementById('bonusFeedback').innerHTML = '';
+      document.getElementById('bonusActions').classList.remove('hidden');
+      document.getElementById('bonusAfter').classList.add('hidden');
+      document.getElementById('btnSubmitBonus').disabled = true;
+
+      goToScreen('bonus');
+    }
+
+    function submitBonusAnswer() {
+      if (state.bonusSelected === null) return;
+      const g = state.selectedGame;
+      const bq = g.bonusQuestion;
+      const correct = state.bonusSelected === bq.correct;
+      state.bonusCorrect = correct;
+
+      if (correct) playCorrectSound();
+      else playWrongSound();
+
+      const options = document.querySelectorAll('#bonusOptions .mcq-option');
+      options.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === bq.correct) btn.classList.add('correct');
+        else if (i === state.bonusSelected && !correct) btn.classList.add('wrong');
+      });
+
+      const feedback = document.getElementById('bonusFeedback');
+      feedback.classList.remove('hidden');
+      if (correct) {
+        feedback.className = 'bonus-result success';
+        feedback.innerHTML = '✅ Correct! You earned a Bonus Point. Award it to a team below.';
+      } else {
+        feedback.className = 'bonus-result fail';
+        feedback.innerHTML = '❌ Not quite. The correct answer was highlighted. You can still continue.';
+      }
+
+      document.getElementById('bonusActions').classList.add('hidden');
+      document.getElementById('bonusAfter').classList.remove('hidden');
+
+      // Hide award buttons if wrong
+      document.getElementById('btnAwardBonusA').style.display = correct ? '' : 'none';
+      document.getElementById('btnAwardBonusB').style.display = correct ? '' : 'none';
+      document.getElementById('btnSkipBonusPoint').style.display = correct ? '' : 'none';
+    }
+
+    function showLoadingThenStart() {
+      const loader = document.getElementById('loadingScreen');
+      const loadingText = document.getElementById('loadingText');
+      if (loadingText) loadingText.textContent = 'Preparing your game…';
+      loader.classList.remove('hide');
+      loader.classList.add('show');
+      loader.setAttribute('aria-hidden', 'false');
+      setTimeout(() => {
+        loader.classList.remove('show');
+        loader.classList.add('hide');
+        loader.setAttribute('aria-hidden', 'true');
+        startGame();
+      }, 1800);
+    }
+
+    function showContent() {
+      const g = state.selectedGame;
+      const content = g.content[state.currentContentIndex % g.content.length];
+      document.getElementById('clueType').textContent = content.type;
+      document.getElementById('clueText').textContent = content.text;
+    }
+
+    function nextContent() {
+      state.currentContentIndex++;
+      showContent();
+      updateTurnInfo();
+      startTimer();
+    }
+
+    function updateTurnInfo() {
+      const g = state.selectedGame;
+      let turnName = '';
+      if (g.type === 'team') {
+        const isA = state.currentRound % 2 === 1;
+        turnName = isA ? 'Team A' : 'Team B';
+        if (isA && state.teamA.length) turnName += ' (' + state.teamA[state.currentTurnIndex % state.teamA.length] + ')';
+        if (!isA && state.teamB.length) turnName += ' (' + state.teamB[state.currentTurnIndex % state.teamB.length] + ')';
+      } else {
+        turnName = state.players[state.currentTurnIndex % state.players.length];
+      }
+      document.getElementById('turnInfo').textContent = `Round ${state.currentRound} of ${g.maxRounds} · ${turnName}'s turn`;
+      state.currentTurnIndex++;
+    }
+
+    function startTimer() {
+      stopTimer();
+      state.timeLeft = state.selectedGame.roundTime;
+      updateTimerDisplay();
+      state.timerInterval = setInterval(() => {
+        state.timeLeft--;
+        updateTimerDisplay();
+        if (state.timeLeft <= 0) {
+          stopTimer();
+          goToScreen(5);
+          document.getElementById('confirmText').textContent = 'Time is up! Did they succeed?';
+          updateConfirmScores();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (state.timerInterval) {
+        clearInterval(state.timerInterval);
+        state.timerInterval = null;
+      }
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(state.timeLeft / 60).toString().padStart(2, '0');
+      const s = (state.timeLeft % 60).toString().padStart(2, '0');
+      const el = document.getElementById('timerDisplay');
+      el.textContent = `${m}:${s}`;
+      el.classList.toggle('warning', state.timeLeft <= 10);
+    }
+
+    function updatePlayScores() {
+      document.getElementById('scoreA').textContent = state.scores.A;
+      document.getElementById('scoreB').textContent = state.scores.B;
+    }
+
+    function updateConfirmScores() {
+      document.getElementById('confirmScoreA').textContent = state.scores.A;
+      document.getElementById('confirmScoreB').textContent = state.scores.B;
+    }
+
+    function resetScores() {
+      state.scores = { A: 0, B: 0 };
+      state.history = [];
+    }
+
+    function finishGame() {
+      stopTimer();
+      goToScreen(6);
+      const a = state.scores.A;
+      const b = state.scores.B;
+      let winnerText = '';
+      if (a > b) winnerText = 'Team A Wins! 🎉';
+      else if (b > a) winnerText = 'Team B Wins! 🎉';
+      else winnerText = "It's a Tie! 🤝";
+      document.getElementById('winnerText').textContent = winnerText;
+      document.getElementById('finalScoreText').textContent = `Final score ${a} – ${b}`;
+      document.getElementById('summaryList').innerHTML = `
+        <p><strong>Game:</strong> ${escapeHtml(state.selectedGame.name)}</p>
+        <p><strong>Players:</strong> ${state.players.map(escapeHtml).join(', ')}</p>
+        <p><strong>Team A:</strong> ${state.teamA.map(escapeHtml).join(', ') || '—'} → ${a} points</p>
+        <p><strong>Team B:</strong> ${state.teamB.map(escapeHtml).join(', ') || '—'} → ${b} points</p>
+        <p><strong>Rounds played:</strong> ${Math.min(state.currentRound, state.selectedGame.maxRounds)}</p>
+      `;
+    }
+
+    function fullReset() {
+      stopTimer();
+      state = {
+        currentScreen: 1,
+        selectedGame: null,
+        players: [],
+        teamA: [],
+        teamB: [],
+        scores: { A: 0, B: 0 },
+        currentRound: 1,
+        currentTurnIndex: 0,
+        currentContentIndex: 0,
+        timerInterval: null,
+        timeLeft: 0,
+        isTeamGame: true,
+        history: [],
+        bonusSelected: null,
+        bonusCorrect: false,
+        bonusAwarded: false
+      };
+      document.getElementById('btnChooseGame').disabled = true;
+      document.getElementById('gameGrid').querySelectorAll('.game-card').forEach(c => {
+        c.classList.remove('selected');
+        c.setAttribute('aria-selected', 'false');
+      });
+      document.getElementById('playerList').innerHTML = '';
+      document.getElementById('teamSetup').classList.add('hidden');
+    }
+
+    init();
+  </script>
+</body>
+</html>
